@@ -1,0 +1,104 @@
+.list-group.sidebar-list {
+  border-radius: 5px;
+  overflow: hidden; }
+  .list-group.sidebar-list .list-group-item-secondary[data-toggle="collapse"] {
+    cursor: pointer; }
+  .list-group.sidebar-list .list-group-item:first-child {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important; }
+  .list-group.sidebar-list .list-group-item:last-child {
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important; }
+
+.x-list {
+  margin: 0;
+  padding: 0 0 0 15px;
+  font-size: 13px; }
+
+@media only screen and (min-width: 992px) {
+  .down-padding {
+    padding-bottom: 30px; } }
+
+.caption-title {
+  font-size: 14px; }
+
+.filter_form_title {
+  font-weight: 700; }
+  @media only screen and (min-width: 768px) {
+    .filter_form_title {
+      width: 120px;
+      margin-right: 20px; } }
+  @media only screen and (max-width: 767px) {
+    .filter_form_title {
+      display: block;
+      margin-bottom: 5px; } }
+
+.c-pointer {
+  cursor: pointer;
+}
+
+.hide-filter {
+  transition: .3s;
+  background-color: #fff;
+  box-shadow: 0 10px 10px white;
+}
+.hide-filter #filter_form{
+  display: none;
+}
+.hide-filter:hover #filter_form{
+  display: block;
+}
+#sample-up {
+  display: none;
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+}
+.display-warning {
+  font-family: monospace;
+  font-size: 1.5rem;
+}
+
+#sample-detail-viewer,
+#pattern-detail-viewer {
+  z-index: 999;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,0,0,.1);
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+#header_modal,
+#pattern-detail-viewer .card {
+  box-shadow: 0 30px 50px  rgba(0,0,0,.25);
+}
+#close_smaple_detail_modal{
+  position: absolute;
+  top: -45px;
+  right: -15px;
+  display: block;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 25px;
+  background-color: #eee;
+  font-size: 30px;
+  line-height: .9;
+  text-align: center;
+}
+#close_pattern_detail_modal {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  display: block;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 25px;
+  background-color: #eee;
+  font-size: 30px;
+  line-height: .9;
+  text-align: center;
+}
