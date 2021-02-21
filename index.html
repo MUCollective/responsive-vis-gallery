@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+  <title>Responsive Visualization Gallery</title>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Header -->
+    <div class="container" id="header">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" @click="navigate('main')">Responsive Visualization Gallery</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+          aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navigation">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link c-pointer" @click="navigate('main')">Design Patterns</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link c-pointer" @click="navigate('sample')">Sample</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link c-pointer" @click="navigate('by_problem')">By Problem</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <!-- App Contents Starts -->
+    <section id="pattern-viewer" v-if="data.mode === 'main'">
+      <div class="container" id="header" style="padding-top:30px">
+        <div class="row">
+          <div class="col-12">
+            <h1 class="display-4">Design Pattern Explorer</h1>
+            <p class="lead">
+              Browse design patterns with relevant examples.
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-lg-3">
+            <p class="d-block d-lg-none">
+              <a class="btn btn-primary" style="width: 100%;" id="pattern_sidebar_toggle"
+                onclick="toggle_class('#pattern_sidebar', 'd-none'); toggle_text('#pattern_sidebar_toggle', 'See Patterns', 'Hide Patterns')"
+                href="#">
+                See Patterns
+              </a>
+            </p>
+            <ul class="list-group sidebar-list d-none d-lg-flex" id="pattern_sidebar"
+              style="position: -webkit-sticky; position: sticky; top: 0; z-index: 9; margin-bottom: 30px;">
+              <li class="list-group-item list-group-item-primary">Design Patterns</li>
+              <template v-for="(item, i) in data.pattern_data">
+                <li class="list-group-item list-group-item-secondary c-pointer" data-toggle="collapse"
+                  :data-target="'#pattern-'+item.number" aria-expanded="false" :aria-controls="'pattern-'+item.number">
+                  <%item.keyword%>
+                </li>
+                <group class="collapse" :id="'pattern-'+item.number" data-parent="#pattern_sidebar">
+                  <li v-for="(subitem, j) in item.data" :key="subitem.Name" class="list-group-item c-pointer"
+                    :class="{'list-group-item-warning': mode_main.selected_pattern === subitem.Name}"
+                    @click="show_pattern(i,j)"
+                    onclick="toggle_class('#pattern_sidebar', 'd-none'); toggle_text('#pattern_sidebar_toggle', 'Hide Patterns', 'See Patterns')">
+                    <%subitem.Name%>
+                  </li>
+                </group>
+              </template>
+            </ul>
+          </div>
+
+          <div class="col-12 col-lg-9" style="padding-bottom: 30px;">
+            <div class="card" v-if="mode_main.curr_pattern">
+              <div class="card-header"
+                style="background-color: #f1f1f1;">
+                <span class="badge badge-secondary">
+                  <%mode_main.curr_pattern.Target%>
+                </span>&nbsp;&nbsp;&nbsp;<span class="badge badge-secondary">
+                  <%mode_main.curr_pattern.Action%>
+                </span>
+                <h2>
+                  <%mode_main.curr_pattern.Name%>
+                </h2>
+              </div>
+              <div class="card-body">
+                <img :src="'img/'+mode_main.curr_pattern.Image" />
+              </div>
+              <div class="card-body">
+                <p>
+                  <%mode_main.curr_pattern.Definition%>
+                </p>
+
+                <div class="card" style="margin-bottom: 20px; box-shadow: 0 2px 5px -2px rgba(0,0,0,0.2)"
+                  v-for="(article, k) in mode_main.sub_articles">
+                  <div class="card-body">
+                    <h6 class="card-title">
+                      <span class="badge badge-primary c-pointer" @click="view_sample_detail(article.Item)">
+                        <%article.Item%>
+                      </span>
+                      [<%article.journal%>] <%article.Title%>
+                          <a class="badge badge-warning" :href="article.URL" target="_blank">Go to the Article</a>
+                    </h6>
+                    <p>
+                      <%article.desc%>
+                    </p>
+                    <div class="row" style="border-top: 1px solid #ddd; padding-top: 15px;">
+                      <div class="col-3 col-lg-2 caption-title">Format</div>
+                      <div class="col-9 col-lg-4">
+                        <span class="badge badge-secondary">
+                          <%article.Format%>
+                        </span>
+                        <span v-if="article.Format_2 !== ''" class="badge badge-secondary" style="margin-left: 3px;">
+                          <%article.Format_2%>
+                        </span>
+                      </div>
+
+                      <div class="col-3 col-lg-2 caption-title">Chart Size</div>
+                      <div class="col-9 col-lg-4"><span class="badge badge-secondary">
+                          <%article.Chart_Size%>
+                        </span></div>
+
+                      <div class="col-3 col-lg-2 caption-title">Chart Type</div>
+                      <div class="col-9 col-lg-4">
+                        <span v-for="ctype in article.Chart_Type" class="badge badge-secondary"
+                          style="margin-right: 3px;">
+                          <%ctype%>
+                        </span>
+                      </div>
+
+                      <div class="col-3 col-lg-2 caption-title">Encodings</div>
+                      <div class="col-9 col-lg-4">
+                        <span v-for="etype in article.Encodings" class="badge badge-secondary"
+                          style="margin-right: 3px;">
+                          <%etype%>
+                        </span>
+                      </div>
+
+                      <div class="col-3 col-lg-2 caption-title">Data Type</div>
+                      <div class="col-9 col-lg-4">
+                        <span v-for="dtype in article.Data_Type" class="badge badge-secondary"
+                          style="margin-right: 3px;">
+                          <%dtype%>
+                        </span>
+                      </div>
+
+                      <div class="col-3 col-lg-2 caption-title">Data Size</div>
+                      <div class="col-9 col-lg-4"><span class="badge badge-secondary">
+                          <%article.Data_Size%>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </section>
+    <section id="sample-viewer" v-else-if="data.mode === 'sample'">
+      <a class="btn btn-primary" id="sample-up" href="#">Top</a>
+      <div class="container" id="header" style="padding-top:30px">
+        <div class="row">
+          <div class="col-12">
+            <h1 class="display-4">Samples</h1>
+          </div>
+        </div>
+        <div id="filter_tab" class="row sticky-top" style="z-index: 400;">
+          <div class="col-12" style="padding-bottom: 30px;">
+            <h4 class="my-2">Filter</h4>
+            <div class="card" id="filter_form">
+              <div class="card-body">
+                <div class="form-row">
+                  <!-- Format -->
+                  <div class="col-md-2 col-12">
+                    <span class="filter_form_title">Format 1</span>
+                  </div>
+                  <div class="form-group col-md-10 col-12">
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format" id="format_static" value="Static">
+                      <label class="form-check-label" for="format_static">Static</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format" id="format_animation" value="Animation">
+                      <label class="form-check-label" for="format_animation">Animation</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format" id="format_interactive" value="Interactive">
+                      <label class="form-check-label" for="format_interactive">Interactive</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-12">
+                    <span class="filter_form_title">Format 2</span>
+                  </div>
+                  <div class="form-group col-md-10 col-12">
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format_2" id="format_single_view" value="Single view">
+                      <label class="form-check-label" for="format_single_view">Single view</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format_2" id="format_multiple_views" value="Multiple views">
+                      <label class="form-check-label" for="format_multiple_views">Multiple views</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format_2" id="format_small_multiples" value="Small multiples">
+                      <label class="form-check-label" for="format_small_multiples">Small multiples</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format_2" id="format_interactive_slideshow"
+                        value="Interactive slideshow">
+                      <label class="form-check-label" for="format_interactive_slideshow">Interactive slideshow</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format_2" id="format_parallax" value="Parallax">
+                      <label class="form-check-label" for="format_parallax">Parallax</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format_2" id="format_map" value="Map with pan/zoom">
+                      <label class="form-check-label" for="format_map">Map with pan/zoom</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Format_2" id="format_dynamic_query" value="Dynamic query">
+                      <label class="form-check-label" for="format_dynamic_query">Dynamic query</label>
+                    </div>
+                  </div>
+                  <!-- Chart Size -->
+                  <div class="col-md-2 col-12">
+                    <span class="filter_form_title">Chart Size</span>
+                  </div>
+                  <div class="form-group col-md-10 col-12">
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Size" id="chart_size_big" value="Big">
+                      <label class="form-check-label" for="chart_size_big">Big</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Size" id="chart_size_medium" value="Medium">
+                      <label class="form-check-label" for="chart_size_medium">Medium</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Size" id="chart_size_small" value="Small">
+                      <label class="form-check-label" for="chart_size_small">Small</label>
+                    </div>
+                  </div>
+                  <!-- Chart Type -->
+                  <div class="col-md-2 col-12">
+                    <span class="filter_form_title">Chart Type</span>
+                  </div>
+                  <div class="form-group col-md-10 col-12">
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_line" value="Line">
+                      <label class="form-check-label" for="chart_type_line">Line</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_area" value="Area">
+                      <label class="form-check-label" for="chart_type_area">Area</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_bar" value="Bar">
+                      <label class="form-check-label" for="chart_type_bar">Bar</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_choropleth" value="Choropleth">
+                      <label class="form-check-label" for="chart_type_choropleth">Choropleth</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_map" value="Map">
+                      <label class="form-check-label" for="chart_type_map">Map</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_dotmap" value="Dot-Map">
+                      <label class="form-check-label" for="chart_type_dotmap">Dot-Map</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_cartogram" value="Cartogram">
+                      <label class="form-check-label" for="chart_type_cartogram">Cartogram</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_flowmap" value="Flowmap">
+                      <label class="form-check-label" for="chart_type_flowmap">Flowmap</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_scatterplot" value="Scatterplot">
+                      <label class="form-check-label" for="chart_type_scatterplot">Scatterplot</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_dotplot" value="Dotplot">
+                      <label class="form-check-label" for="chart_type_dotplot">Dotplot</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_bubble" value="Bubble">
+                      <label class="form-check-label" for="chart_type_bubble">Bubble</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_treemap" value="Treemap">
+                      <label class="form-check-label" for="chart_type_treemap">Treemap</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_table" value="Table">
+                      <label class="form-check-label" for="chart_type_table">Table</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_pie" value="Pie">
+                      <label class="form-check-label" for="chart_type_pie">Pie</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_polyline" value="Polyline">
+                      <label class="form-check-label" for="chart_type_polyline">Polyline</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_polar" value="Polar">
+                      <label class="form-check-label" for="chart_type_polar">Polar</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_boxplot" value="Boxplot">
+                      <label class="form-check-label" for="chart_type_boxplot">Box plot</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_network" value="Network">
+                      <label class="form-check-label" for="chart_type_network">Network</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_shpae" value="Shape">
+                      <label class="form-check-label" for="chart_type_shpae">Shape</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_isotype" value="Isotype">
+                      <label class="form-check-label" for="chart_type_isotype">Isotype</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_dot2" value="Icon Array">
+                      <label class="form-check-label" for="chart_type_dot2">Icon Array</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_pc" value="Parallel Coordinates">
+                      <label class="form-check-label" for="chart_type_pc">Parallel Coordinates</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Chart_Type" id="chart_type_etc" value="Etc">
+                      <label class="form-check-label" for="chart_type_etc">Etc</label>
+                    </div>
+                  </div>
+                  <!-- Data Size -->
+                  <div class="col-md-2 col-12">
+                    <span class="filter_form_title">Data Size</span>
+                  </div>
+                  <div class="form-group col-md-10 col-12">
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Size" id="data_size_superbig" value="p25K">
+                      <label class="form-check-label" for="data_size_superbig">25K+</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Size" id="data_size_big" value="≤25K">
+                      <label class="form-check-label" for="data_size_big">≤25K</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Size" id="data_size_medium" value="≤1-5K">
+                      <label class="form-check-label" for="data_size_medium">≤1.5K</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Size" id="data_size_small" value="≤200">
+                      <label class="form-check-label" for="data_size_small">≤200</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Size" id="data_size_supersmall" value="≤50">
+                      <label class="form-check-label" for="data_size_supersmall">≤50</label>
+                    </div>
+                  </div>
+                  <!-- Data Type -->
+                  <div class="col-md-2 col-12">
+                    <span class="filter_form_title">Data Type</span>
+                  </div>
+                  <div class="form-group col-md-10 col-12">
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Type" id="data_type_temporal" value="Temporal">
+                      <label class="form-check-label" for="data_type_temporal">Temporal</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Type" id="data_type_geospatial" value="Geospatial">
+                      <label class="form-check-label" for="data_type_geospatial">Geospatial</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Type" id="data_type_numerical" value="Numerical">
+                      <label class="form-check-label" for="data_type_numerical">Numerical</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Type" id="data_type_categorical" value="Categorical">
+                      <label class="form-check-label" for="data_type_categorical">Categorical</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input @change="sample_filter()" class="form-check-input" type="checkbox"
+                        v-model="mode_sample.filter.Data_Type" id="data_type_text" value="Text">
+                      <label class="form-check-label" for="data_type_text">Text</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <!-- <button class="btn btn-primary" @click="sample_filter()">Filter</button> -->
+                    <a class="btn btn-warning" @click="clear_filter()">Clear Filter</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12" style="padding-bottom: 30px;">
+            <div class="card">
+              <div class="card-body">
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px"
+                  v-if="mode_sample.filtered_data.length == 0">
+                  <div class="col-12 display-warning text-center">Nothing is Found :(</div>
+                </div>
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px"
+                  v-for="(sample, l) in mode_sample.filtered_data">
+                  <div class="col-12" style="margin-bottom: 5px">
+                    <a class="badge badge-primary text-light c-pointer" @click="view_sample_detail(sample.Item)"
+                      style="margin-right: 3px; margin-left: -3px;">
+                      <%sample.Item%>
+                    </a>
+                    <span style="font-weight: 400 !important; font-size: 14px;">[<%sample.journal%>] <%sample.Title%>
+                    </span>
+                    <a class="badge badge-warning" :href="sample.URL" target="_blank">↗︎</a>
+                  </div>
+                  <div class="col-3 col-lg-2 caption-title">Format</div>
+                  <div class="col-9 col-lg-4"><span class="badge badge-secondary">
+                      <%sample.Format%>
+                    </span>
+                    <span class="badge badge-secondary" style="margin-left: 3px;" v-if="sample.Format_2 !== ''">
+                      <%sample.Format_2%>
+                    </span>
+                  </div>
+
+
+                  <div class="col-3 col-lg-2 caption-title">Chart Size</div>
+                  <div class="col-9 col-lg-4"><span class="badge badge-secondary">
+                      <%sample.Chart_Size%>
+                    </span></div>
+
+                  <div class="col-3 col-lg-2 caption-title">Chart Type</div>
+                  <div class="col-9 col-lg-4">
+                    <span v-for="ctype in sample.Chart_Type" class="badge badge-secondary" style="margin-right: 3px;">
+                      <%ctype%>
+                    </span>
+                  </div>
+
+                  <div class="col-3 col-lg-2 caption-title">Encodings</div>
+                  <div class="col-9 col-lg-4">
+                    <span v-for="etype in sample.Encodings" class="badge badge-secondary" style="margin-right: 3px;">
+                      <%etype%>
+                    </span>
+                  </div>
+
+                  <div class="col-3 col-lg-2 caption-title">Data Type</div>
+                  <div class="col-9 col-lg-4">
+                    <span v-for="dtype in sample.Data_Type" class="badge badge-secondary" style="margin-right: 3px;">
+                      <%dtype%>
+                    </span>
+                  </div>
+
+                  <div class="col-3 col-lg-2 caption-title">Data Size</div>
+                  <div class="col-9 col-lg-4">
+                    <span class="badge badge-secondary">
+                      <%sample.Data_Size%>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <section id="by-problem-viewer" v-else-if="data.mode === 'by_problem'">
+
+      <div class="container" id="header" style="padding-top:30px">
+        <div class="row">
+          <div class="col-12">
+            <h1 class="display-4">By Problem</h1>
+            <p>
+              Explore design strategies for your design problem for responsive visualization. <br />
+              <strong>Constraints</strong> can be interpreted in two ways.
+              (1) A constraint must be satisfied to apply the strategy.
+              (2) A constraint describes when the strategy is preferred.<br />
+              <strong>Loss</strong> means what can be lost (or changed) by applying a <strong>Strategy</strong>.
+              It is effective for you to compare your purpose of visualization with <strong>Losses</strong>. <br />
+              <strong>Compensations</strong> refers to methods that you may want to consider adding to the
+              <strong>Strategy</strong> while addressing <strong>Loss</strong>.
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-3 col-md-6 col-12" style="padding-bottom: 30px;">
+            <h4>1. Problems<span class="small" v-if="mode_by_problem.curr_problem">: <%mode_by_problem.curr_problem %></span></h4>
+            <p class="d-block d-md-none" style="position: -webkit-sticky; position: sticky; top: 0; z-index: 50;">
+              <a class="btn btn-primary" style="width: 100%;" id="problem_sidebar_togle"
+                onclick="toggle_class('#problem_sidebar', 'd-none'); toggle_text('#problem_sidebar_togle', 'See Problems', 'Hide Problems')"
+                href="#">
+                See Problems
+              </a>
+            </p>
+            <ul class="list-group sidebar-list d-none d-md-flex" id="problem_sidebar"
+              style="position: -webkit-sticky; position: sticky; top: 0; z-index: 9; margin-bottom: 30px;">
+              <group v-for="(prob, i) in mode_by_problem.dependency_graph" :key="prob.Group_Id">
+                <li class="list-group-item list-group-item-secondary"><strong>
+                    <%prob.Problem_Set%>
+                  </strong></li>
+                <li v-for="(subprob, j) in prob.Sub_Problems" class="list-group-item c-pointer"
+                  :class="{'list-group-item-warning': mode_by_problem.curr_problem === subprob.Problem}"
+                  @click="see_strategies(i,j)"
+                  onclick="toggle_class('#problem_sidebar', 'd-none'); toggle_text('#problem_sidebar_togle', 'See Problems', 'Hide Problems')">
+                  <%subprob.Problem%>
+                </li>
+              </group>
+            </ul>
+          </div>
+          <!--Problem-->
+
+
+          <div v-if="mode_by_problem.strategies.length > 0" class="col-lg-3 col-md-6 col-12"
+            style="padding-bottom: 30px;">
+            <h4>2. Strategy</h4>
+            <p class="d-block d-md-none" style="position: -webkit-sticky; position: sticky; top: 0; z-index: 50;">
+              <a class="btn btn-primary" style="width: 100%;" id="strategy_sidebar_toggle"
+                onclick="toggle_class('#strategy_sidebar', 'd-none'); toggle_text('#strategy_sidebar_toggle', 'See Strategies', 'Hide Strategies')"
+                href="#">
+                See Strategies
+              </a>
+            </p>
+            <ul class="list-group sidebar-list d-none d-md-flex" id="strategy_sidebar"
+              style="position: -webkit-sticky; position: sticky; top: 0; z-index: 9; margin-bottom: 30px;">
+              <li v-for="(strat, k) in mode_by_problem.strategies" class="list-group-item c-pointer"
+                :class="{'list-group-item-warning': mode_by_problem.curr_strategy === strat.Name}"
+                @click="see_strategy_detail(k)"
+                onclick="toggle_class('#strategy_sidebar', 'd-none'); toggle_text('#strategy_sidebar_toggle', 'See Strategies', 'Hide Strategies')">
+                <%strat.Name%>
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="mode_by_problem.detail !== null" class="col-lg-6 col-md-12 col-12" style="padding-bottom: 30px;">
+            <h4>3. Details</h4>
+            <div class="card">
+              <div class="card-header"
+                style="background-color: #f1f1f1; position: -webkit-sticky; position: sticky; top: 0; z-index: 9;">
+                <h2>
+                  <%mode_by_problem.detail.Name%>
+                </h2>
+              </div>
+              <div class="card-body">
+                <h5 class="border-bottom">Description</h5>
+                <p>
+                  <%mode_by_problem.detail.Desc%>
+                </p>
+                <template v-if="mode_by_problem.detail.Constraints">
+                  <h5 class="border-bottom">Constraints</h5>
+                  <p>
+                    <%mode_by_problem.detail.Constraints%>
+                  </p>
+                </template>
+                <template v-if="mode_by_problem.detail.Examples">
+
+                  <h5 class="border-bottom">Examples</h5>
+                  <group v-for="(ex, l) in mode_by_problem.detail.Examples_loaded" :key="ex.Name">
+                    <div style="padding-left: 10px;">
+                      <a class="badge badge-primary text-light c-pointer" @click="view_sample_detail(ex.Item)"
+                        style="margin-right: 3px; margin-left: -10px;">
+                        <%ex.Item%>
+                      </a>
+                      <span style="font-weight: 400 !important; font-size: 14px;">[<%ex.journal%>] <%ex.Title%></span>
+                      <a class="badge badge-warning" :href="ex.URL" target="_blank">↗︎</a>
+                    </div>
+                    <div style="padding-left: 10px; margin-bottom: 7px;">
+                      <span class="badge badge-secondary">
+                        <% ex.Format + (ex.Format_2 ? "-" + ex.Format_2 : "" ) %>
+                      </span> /
+                      <span class="badge badge-secondary">
+                        <%ex.Chart_Size%>
+                      </span> /
+                      <span class="badge badge-secondary" v-for="ctype in ex.Chart_Type" style="margin-right: 3px;">
+                        <%ctype%>
+                      </span> /
+                      <span class="badge badge-secondary" v-for="dtype in ex.Data_Type" style="margin-right: 3px;">
+                        <%dtype%>
+                      </span>
+                    </div>
+                  </group>
+
+                </template>
+                <h5 class="border-bottom" style="margin-top: 20px;">Loss</h5>
+                <template v-for="(loss, m) in mode_by_problem.detail.Loss">
+                  <p>
+                    <strong>
+                      <%loss.Name%>
+                    </strong><br />
+                    <% (loss.Desc ? loss.Desc : "" ) %>
+                  </p>
+                  <h6 v-if="loss.Relaxation.length > 0">- Compensation<%(loss.Relaxation.length> 1 ? "s" : "")%></h6>
+                  <ul>
+                    <li v-for="(rex, n) in loss.Relaxation" v-html="rex"></li>
+                  </ul>
+                </template>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!--row-->
+      </div>
+      <!--container-->
+
+    </section>
+
+    <section id="sample-detail-viewer" class="py-5" v-if="mode_sample_detail.show">
+      <div class="container bg-white rounded" id="header_modal" style="padding-top:30px">
+        <div class="row">
+          <div class="col-12">
+            <h2>
+              <%mode_sample_detail.item.Title%>
+                <a class="badge badge-warning" :href="mode_sample_detail.item.URL" target="_blank">↗︎</a>
+            </h2>
+            <a id="close_smaple_detail_modal" class="c-pointer" @click="modal_stack_out()">&times;</a>
+            <p>
+              Source: <%mode_sample_detail.item.journal%>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12" style="padding-bottom: 30px;">
+            <div class="card">
+              <div class="card-body">
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px">
+                  <div class="col-3 col-lg-2 caption-title">Format</div>
+                  <div class="col-9 col-lg-4"><span class="badge badge-secondary">
+                      <%mode_sample_detail.item.Format%>
+                    </span>
+                    <span class="badge badge-secondary" style="margin-left: 3px;"
+                      v-if="mode_sample_detail.item.Format_2 !== ''">
+                      <%mode_sample_detail.item.Format_2%>
+                    </span>
+                  </div>
+
+
+                  <div class="col-3 col-lg-2 caption-title">Chart Size</div>
+                  <div class="col-9 col-lg-4"><span class="badge badge-secondary">
+                      <%mode_sample_detail.item.Chart_Size%>
+                    </span></div>
+
+                  <div class="col-3 col-lg-2 caption-title">Chart Type</div>
+                  <div class="col-9 col-lg-4">
+                    <span v-for="ctype in mode_sample_detail.item.Chart_Type" class="badge badge-secondary"
+                      style="margin-right: 3px;">
+                      <%ctype%>
+                    </span>
+                  </div>
+
+                  <div class="col-3 col-lg-2 caption-title">Encodings</div>
+                  <div class="col-9 col-lg-4">
+                    <span v-for="etype in mode_sample_detail.item.Encodings" class="badge badge-secondary"
+                      style="margin-right: 3px;">
+                      <%etype%>
+                    </span>
+                  </div>
+
+                  <div class="col-3 col-lg-2 caption-title">Data Type</div>
+                  <div class="col-9 col-lg-4">
+                    <span v-for="dtype in mode_sample_detail.item.Data_Type" class="badge badge-secondary"
+                      style="margin-right: 3px;">
+                      <%dtype%>
+                    </span>
+                  </div>
+
+                  <div class="col-3 col-lg-2 caption-title">Data Size</div>
+                  <div class="col-9 col-lg-4">
+                    <span class="badge badge-secondary">
+                      <%mode_sample_detail.item.Data_Size%>
+                    </span>
+                  </div>
+
+                  <div class="col-3 col-lg-2 caption-title">Patterns</div>
+                  <div class="col-9 col-lg-10">
+                    <div v-for="ptrn in mode_sample_detail.item.Patterns">
+                      <span @click="show_pattern_detail(ptrn.name); " class="badge badge-info c-pointer"
+                        style="margin-right: 3px;">
+                        <%ptrn.name%>
+                      </span>
+                      <span style="font-size: 0.8em">
+                        <% ptrn.desc %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </section>
+
+    <section id="pattern-detail-viewer" class="py-3" v-if="mode_pattern_detail.show">
+      <div class="container">
+        <div class="card" v-if="mode_pattern_detail.curr_pattern">
+          <a id="close_pattern_detail_modal" class="c-pointer" @click="modal_stack_out()">&times;</a>
+          <div class="card-header" style="background-color: #f1f1f1;">
+            <span class="badge badge-secondary">
+              <%mode_pattern_detail.curr_pattern.Target%>
+            </span>&nbsp;&nbsp;&nbsp;<span class="badge badge-secondary">
+              <%mode_pattern_detail.curr_pattern.Action%>
+            </span>
+            <h2>
+              <%mode_pattern_detail.curr_pattern.Name%>
+            </h2>
+          </div>
+          <div class="card-body">
+            <img :src="'img/'+mode_pattern_detail.curr_pattern.Image.replace('/','-')" />
+          </div>
+          <div class="card-body">
+            <p>
+              <%mode_pattern_detail.curr_pattern.Definition%>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Contents Ends -->
+    <!-- Footer -->
+    <footer class="container" id="footer" style="padding-top:30px; padding-bottom: 30px;">
+      <div class="row">
+        <div class="col-12 text-center">
+          &copy; Responsive Visualization Gallery (2021)
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    let toggle_class = function (s, a) {
+      if ($(s).hasClass(a)) $(s).removeClass(a);
+      else $(s).addClass(a);
+    }
+    let toggle_text = function (s, a, b) {
+      console.log($(s).text().trim())
+      if ($(s).text().trim() == a) $(s).text(b);
+      else if ($(s).text().trim() == b) $(s).text(a);
+    }
+  </script>
+  <script src="js/dependencies.js"></script>
+  <script src="js/pattern_data.js"></script>
+  <script src="js/pattern_def.js"></script>
+  <script src="js/sub_articles.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
