@@ -74,12 +74,12 @@
               style="position: -webkit-sticky; position: sticky; top: 0; z-index: 9; margin-bottom: 30px;">
               <li class="list-group-item list-group-item-primary">Design Patterns</li>
               <template v-for="(item, i) in data.pattern_data">
-                <li class="list-group-item list-group-item-secondary c-pointer" data-toggle="collapse"
+                <li class="list-group-item list-group-item-secondary c-pointer py-1" data-toggle="collapse"
                   :data-target="'#pattern-'+item.number" aria-expanded="false" :aria-controls="'pattern-'+item.number">
                   <%item.keyword%>
                 </li>
                 <group class="collapse" :id="'pattern-'+item.number" data-parent="#pattern_sidebar">
-                  <li v-for="(subitem, j) in item.data" :key="subitem.Name" class="list-group-item c-pointer"
+                  <li v-for="(subitem, j) in item.data" :key="subitem.Name" class="list-group-item c-pointer py-1"
                     :class="{'list-group-item-warning': mode_main.selected_pattern === subitem.Name}"
                     @click="show_pattern(i,j)"
                     onclick="toggle_class('#pattern_sidebar', 'd-none'); toggle_text('#pattern_sidebar_toggle', 'Hide Patterns', 'See Patterns')">
