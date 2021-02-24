@@ -48,7 +48,8 @@
 .hide-filter:hover #filter_form{
   display: block;
 }
-#sample-up {
+#sample-up,
+#pattern-up {
   display: none;
   position: fixed;
   right: 2rem;
