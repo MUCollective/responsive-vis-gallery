@@ -74,6 +74,8 @@ let app = new Vue({
           self.data.modal_control_stack.pop()()
         }
       })
+      let scroll_listener = this.show_top_button;
+      document.addEventListener('scroll', scroll_listener);
     },
     modal_stack_out: function() {
       this.data.modal_control_stack.pop()()
@@ -88,6 +90,8 @@ let app = new Vue({
     clear_events: function () {
       let scroll_listener = this.toggle_filter;
       document.removeEventListener('scroll', scroll_listener);
+      let scroll_listener2 = this.show_top_button;
+      document.removeEventListener('scroll', scroll_listener2);
     },
     initiate_main: function () {
       this.mode_main.curr_pattern = null;
@@ -137,6 +141,7 @@ let app = new Vue({
       let winh = window.scrollY;
       if (winh > 150) {
         $('#pattern-up').show()
+        console.log("X")
       } else {
         $('#pattern-up').hide()
       }
