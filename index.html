@@ -562,7 +562,7 @@
         </div>
         <div class="row">
           <div class="col-lg-3 col-md-6 col-12" style="padding-bottom: 30px;">
-            <h4>1. Problems<span class="small" v-if="mode_by_problem.curr_problem">: <%mode_by_problem.curr_problem %></span></h4>
+            <h4>1. Problems<span class="small d-md-none" v-if="mode_by_problem.curr_problem">: <%mode_by_problem.curr_problem %></span></h4>
             <p class="d-block d-md-none" style="position: -webkit-sticky; position: sticky; top: 0; z-index: 50;">
               <a class="btn btn-primary" style="width: 100%;" id="problem_sidebar_togle"
                 onclick="toggle_class('#problem_sidebar', 'd-none'); toggle_text('#problem_sidebar_togle', 'See Problems', 'Hide Problems')"
