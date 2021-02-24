@@ -141,7 +141,6 @@ let app = new Vue({
       let winh = window.scrollY;
       if (winh > 150) {
         $('#pattern-up').show()
-        console.log("X")
       } else {
         $('#pattern-up').hide()
       }
