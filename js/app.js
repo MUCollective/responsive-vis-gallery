@@ -93,6 +93,8 @@ let app = new Vue({
       this.mode_main.curr_pattern = null;
       this.mode_main.selected_pattern = "";
       this.mode_main.sub_articles = [];
+      let scroll_listener = this.show_top_button;
+      document.addEventListener('scroll', scroll_listener);
     },
     show_pattern: function (i, j) {
       this.mode_main.curr_pattern = this.data.pattern_data[i].data[j];
@@ -129,6 +131,14 @@ let app = new Vue({
       } else {
         $('#filter_tab').removeClass("hide-filter")
         $('#sample-up').hide()
+      }
+    },
+    show_top_button: function ($event) {
+      let winh = window.scrollY;
+      if (winh > 150) {
+        $('#pattern-up').show()
+      } else {
+        $('#pattern-up').hide()
       }
     },
     view_sample_detail: function (sid) {
