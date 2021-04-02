@@ -13,7 +13,7 @@ To cite this:
   title   = {Design Patterns and Trade-Offs in Authoring Communication-Oriented Responsive Visualization},
   journal = {Computer Graphics Forum},
   volume  = 40,
-  number  = 3,
+  issue  = 3,
   pages   = {00--00},
   doi     = {}
 }
