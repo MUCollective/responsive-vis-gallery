@@ -1,3 +1,9 @@
+// Responsive visualization cases (coded)
+// Project: Responsive Visualization Gallery
+// Author: Hyeok Kim
+// First created: Nov, 2020
+// Last updated: Mar, 2021
+
 let sample_sub = {
   data: [{
     "Item": "001-nyt-16-president-1",
