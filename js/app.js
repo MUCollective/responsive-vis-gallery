@@ -1,6 +1,8 @@
-// App 
+// App instance
+// Project: Responsive Visualization Gallery
 // Author: Hyeok Kim
-// Created: Nov, 2021
+// First created: Nov, 2020
+// Last updated: Mar, 2021
 
 // Utility
 String.prototype.union = function (as) {
