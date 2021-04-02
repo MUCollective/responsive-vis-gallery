@@ -1,3 +1,7 @@
+// App 
+// Author: Hyeok Kim
+// Created: Nov, 2021
+
 // Utility
 String.prototype.union = function (as) {
   if (as.constructor.name != "Array") {
