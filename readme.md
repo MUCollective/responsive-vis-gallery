@@ -1,3 +1,4 @@
 # Responsive Visualization Gallery
 
-1. Access: https://responsive-vis-gallery.github.io/
+1. Access: 
+2. Update
