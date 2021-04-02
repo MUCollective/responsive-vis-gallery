@@ -10,10 +10,11 @@ To cite this:
 ```
 @article{responsive-vis-2021
   authors = {Kim, Hyeok and Mortiz, Dominik and Hullman, Jessica},
+  year    = 2021,
   title   = {Design Patterns and Trade-Offs in Authoring Communication-Oriented Responsive Visualization},
   journal = {Computer Graphics Forum},
   volume  = 40,
-  issue  = 3,
+  issue   = 3,
   pages   = {00--00},
   doi     = {}
 }
