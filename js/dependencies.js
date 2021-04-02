@@ -1,3 +1,6 @@
+// Trade-offs
+// Author: Hyeok Kim
+
 let dependency = {
   data: [{ //sub problems for problem set 1
     "Problem_Set": "Graph Density",
