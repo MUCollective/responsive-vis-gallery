@@ -3,7 +3,7 @@
 This is a repository for an interactive gallery for responsive visualization strategies and trade-offs for [our paper](update-link) published on EuroVis 2021 (Computer Graphics Forum).
 
 1. To access: https://mucollective.github.io/responsive-vis-gallery/
-2. To share a new responsive visualization case, please email [us](hyeok@northwestern.edu).
+2. To share a new responsive visualization case, please email [us](mailto:hyeok@northwestern.edu).
 
 To cite this:
 
