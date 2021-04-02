@@ -1,5 +1,8 @@
-// Trade-offs
+// Trade-offs in Responsive Visualization
+// Project: Responsive Visualization Gallery
 // Author: Hyeok Kim
+// First created: Nov, 2020
+// Last updated: Mar, 2021
 
 let dependency = {
   data: [{ //sub problems for problem set 1
