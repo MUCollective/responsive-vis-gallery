@@ -11,11 +11,11 @@ To cite this:
 @article{responsive-vis-2021
   authors = {Kim, Hyeok and Mortiz, Dominik and Hullman, Jessica},
   year    = 2021,
-  title   = {Design Patterns and Trade-Offs in Authoring Communication-Oriented Responsive Visualization},
+  title   = {Design Patterns and Trade-Offs in Responsive Visualization for Communication},
   journal = {Computer Graphics Forum},
   volume  = 40,
   issue   = 3,
-  pages   = {00--00},
-  doi     = {}
+  pages   = {459--470},
+  doi     = {10.1111/cgf.14321}
 }
 ```
